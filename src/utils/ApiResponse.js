@@ -7,4 +7,4 @@ class ApiResponse {
   }
 }
 
-exprot { ApiResponse }
+export { ApiResponse };
