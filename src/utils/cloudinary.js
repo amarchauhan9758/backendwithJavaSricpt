@@ -3,25 +3,50 @@ import fs from "fs";
 
 // Configuration
 
+// CLOUDINARY_ClOUD_NAME= kaaptancloud07
+// CLOUDINARY_API_KEY = 558212642673766
+// CLOUDINARY_API_SECRET = kyjfgqet2uLcOYHaCl4eXFJil5M
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
+  cloud_name: "kaaptancloud07",
+  api_key: "558212642673766",
+  api_secret: "kyjfgqet2uLcOYHaCl4eXFJil5M",
 });
 
 const uploadOnCloudinary = async (localFilePath) => {
   try {
-    if (!localFilePath) return null;
-    //upload the file on cloudinary
+    if (!localFilePath) {
+      throw new Error("No file path provided.");
+    }
+
+    console.log(`Uploading file: ${localFilePath}`);
+
+    // Upload the file to Cloudinary
     const response = await cloudinary.uploader.upload(localFilePath, {
-      resource_type: "auto",
+      resource_type: "auto", // Allows any file type (e.g., image, video, etc.)
     });
-    // file has been uploaded successfull
-    //console.log("file is uploaded on cloudinary ", response.url);
-    fs.unlinkSync(localFilePath);
+
+    console.log("File uploaded to Cloudinary:", response);
+
+    // Remove the file from the local system
+    try {
+      fs.unlinkSync(localFilePath);
+    } catch (unlinkError) {
+      console.error("Error removing local file:", unlinkError);
+    }
+
     return response;
   } catch (error) {
-    fs.unlinkSync(localFilePath); // remove the locally saved temporary file as the upload operation got failed
+    console.error("Cloudinary upload failed:", error.message);
+
+    // Attempt to remove the file even if upload fails
+    try {
+      if (fs.existsSync(localFilePath)) {
+        fs.unlinkSync(localFilePath);
+      }
+    } catch (unlinkError) {
+      console.error("Error removing local file after failure:", unlinkError);
+    }
+
     return null;
   }
 };

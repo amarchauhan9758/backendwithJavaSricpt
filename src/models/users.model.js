@@ -26,7 +26,7 @@ const userSchema = new Schema(
       index: true,
     },
 
-    avata: {
+    avatar: {
       type: String,
       required: true,
     },
@@ -45,7 +45,7 @@ const userSchema = new Schema(
       type: String,
     },
   },
-  { timeStamps: true }
+  { timestamps: true, versionKey: false }
 );
 
 userSchema.pre("save", async function (next) {
