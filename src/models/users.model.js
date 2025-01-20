@@ -57,7 +57,6 @@ userSchema.pre("save", async function (next) {
 });
 // console.log(this?.password, "line no 58");
 userSchema.methods.isPasswordCorrect = async function (password) {
-  // await console.log(password, this.password, "line no 59");
   return await bcrpyt.compare(password, this.password);
 };
 
